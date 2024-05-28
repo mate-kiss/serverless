@@ -12,7 +12,6 @@ import java.util.Map;
 @LambdaHandler(lambdaName = "hello_world",
 	roleName = "hello_world-role",
 	isPublishVersion = true,
-	aliasName = "${lambdas_alias_name}",
 	logsExpiration = RetentionSetting.SYNDICATE_ALIASES_SPECIFIED
 )
 @LambdaUrlConfig
