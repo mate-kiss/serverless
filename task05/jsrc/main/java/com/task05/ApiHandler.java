@@ -27,7 +27,7 @@ public class ApiHandler implements RequestHandler<HashMap<String, Object>, Map<S
 
 		AmazonDynamoDB client = AmazonDynamoDBClientBuilder.defaultClient();
 		DynamoDB database = new DynamoDB(client);
-		Table table = database.getTable("cmtr-0a4e320b-Events");
+		Table table = database.getTable("cmtr-0a4e320b-Events-test");
 		Item item = new Item()
 				.withPrimaryKey("id", request.hashCode())
 				.withInt("principalId", principalId)
