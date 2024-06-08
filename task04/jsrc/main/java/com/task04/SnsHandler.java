@@ -10,21 +10,18 @@ import com.syndicate.deployment.model.RetentionSetting;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @LambdaHandler(lambdaName = "sns_handler",
 	roleName = "sns_handler-role",
 	logsExpiration = RetentionSetting.SYNDICATE_ALIASES_SPECIFIED
 )
 @SnsEvents(@SnsEventSource(targetTopic = "lambda_topic"))
-public class SnsHandler implements RequestHandler<SNSEvent, Map<String, Object>> {
-	public Map<String, Object> handleRequest(SNSEvent request, Context context) {
-		Logger logger = LogManager.getLogger(SnsHandler.class);
+public class SnsHandler implements RequestHandler<SNSEvent, Object> {
+	private static final Logger LOG = LogManager.getLogger(SnsHandler.class);
 
+	public Object handleRequest(SNSEvent request, Context context) {
 		SNSEvent.SNSRecord record = request.getRecords().getFirst();
-		logger.info(record.getSNS().getMessage());
+		LOG.info(record.getSNS().getMessage());
 
-		return new HashMap<>();
+		return null;
 	}
 }
