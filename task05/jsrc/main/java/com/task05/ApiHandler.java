@@ -15,6 +15,7 @@ import com.syndicate.deployment.model.RetentionSetting;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @LambdaHandler(lambdaName = "api_handler",
 	roleName = "api_handler-role",
@@ -29,7 +30,7 @@ public class ApiHandler implements RequestHandler<HashMap<String, Object>, Map<S
 		DynamoDB database = new DynamoDB(client);
 		Table table = database.getTable("cmtr-0a4e320b-Events-test");
 		Item item = new Item()
-				.withPrimaryKey("id", request.hashCode())
+				.withPrimaryKey("id", UUID.randomUUID())
 				.withInt("principalId", principalId)
 				.withString("createdAt", new Date().toString())
 				.withMap("body", content);
