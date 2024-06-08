@@ -28,7 +28,7 @@ public class ApiHandler implements RequestHandler<HashMap<String, Object>, Map<S
 		DynamoDB database = new DynamoDB(client);
 		Table table = database.getTable("cmtr-0a4e320b-Events-test");
 		Item item = new Item()
-				.withPrimaryKey("id", UUID.randomUUID())
+				.withPrimaryKey("id", UUID.randomUUID().toString())
 				.withInt("principalId", principalId)
 				.withString("createdAt", new Date().toString())
 				.withMap("body", content);
