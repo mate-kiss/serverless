@@ -7,8 +7,9 @@ import com.syndicate.deployment.annotations.events.SnsEventSource;
 import com.syndicate.deployment.annotations.events.SnsEvents;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.model.RetentionSetting;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import software.amazon.awssdk.services.cloudwatchlogs.CloudWatchLogsClient;
+import software.amazon.awssdk.services.cloudwatchlogs.model.InputLogEvent;
+import software.amazon.awssdk.services.cloudwatchlogs.model.PutLogEventsRequest;
 
 @LambdaHandler(lambdaName = "sns_handler",
 	roleName = "sns_handler-role",
@@ -16,11 +17,14 @@ import org.apache.logging.log4j.Logger;
 )
 @SnsEvents(@SnsEventSource(targetTopic = "lambda_topic"))
 public class SnsHandler implements RequestHandler<SNSEvent, Object> {
-	private static final Logger LOG = LogManager.getLogger(SnsHandler.class);
-
 	public Object handleRequest(SNSEvent request, Context context) {
+		CloudWatchLogsClient client = CloudWatchLogsClient.builder().build();
 		for (SNSEvent.SNSRecord record : request.getRecords()) {
-			LOG.info("SNS: " + record.getSNS().getMessage());
+			client.putLogEvents(PutLogEventsRequest.builder().logEvents(
+					InputLogEvent.builder().message(
+							record.getSNS().getMessage()
+					).build()
+			).build());
 		}
 
 		return null;
