@@ -19,8 +19,9 @@ public class SnsHandler implements RequestHandler<SNSEvent, Object> {
 	private static final Logger LOG = LogManager.getLogger(SnsHandler.class);
 
 	public Object handleRequest(SNSEvent request, Context context) {
-		SNSEvent.SNSRecord record = request.getRecords().getFirst();
-		LOG.info(record.getSNS().getMessage());
+		for (SNSEvent.SNSRecord record : request.getRecords()) {
+			LOG.info(record.getSNS().getMessage());
+		}
 
 		return null;
 	}

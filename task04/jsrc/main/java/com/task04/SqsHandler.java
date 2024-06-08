@@ -13,13 +13,14 @@ import org.apache.logging.log4j.Logger;
 	roleName = "sqs_handler-role",
 	logsExpiration = RetentionSetting.SYNDICATE_ALIASES_SPECIFIED
 )
-@SqsTriggerEventSource(targetQueue = "async_queue", batchSize = 1)
+@SqsTriggerEventSource(targetQueue = "async_queue", batchSize = 10)
 public class SqsHandler implements RequestHandler<SQSEvent, Object> {
 	private static final Logger LOG = LogManager.getLogger(SqsHandler.class);
 
 	public Object handleRequest(SQSEvent request, Context context) {
-		SQSEvent.SQSMessage message = request.getRecords().get(0);
-		LOG.info(message.getBody());
+		for (SQSEvent.SQSMessage message : request.getRecords()) {
+			LOG.info(message.getBody());
+		}
 
 		return null;
 	}
