@@ -10,6 +10,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.model.RetentionSetting;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class ApiHandler implements RequestHandler<HashMap<String, Object>, Map<S
 		Item item = new Item()
 				.withPrimaryKey("id", UUID.randomUUID().toString())
 				.withInt("principalId", principalId)
-				.withString("createdAt", new Date().toString())
+				.withString("createdAt", Instant.now().toString())
 				.withMap("body", content);
 		table.putItem(item);
 
