@@ -20,7 +20,7 @@ public class SnsHandler implements RequestHandler<SNSEvent, Object> {
 
 	public Object handleRequest(SNSEvent request, Context context) {
 		for (SNSEvent.SNSRecord record : request.getRecords()) {
-			LOG.info(record.getSNS().getMessage());
+			LOG.info("SNS: " + record.getSNS().getMessage());
 		}
 
 		return null;

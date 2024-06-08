@@ -19,7 +19,7 @@ public class SqsHandler implements RequestHandler<SQSEvent, Object> {
 
 	public Object handleRequest(SQSEvent request, Context context) {
 		for (SQSEvent.SQSMessage message : request.getRecords()) {
-			LOG.info(message.getBody());
+			LOG.info("SQS: " + message.getBody());
 		}
 
 		return null;
