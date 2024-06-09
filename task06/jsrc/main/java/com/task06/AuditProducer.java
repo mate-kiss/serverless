@@ -14,6 +14,7 @@ import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.model.RetentionSetting;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,11 +32,14 @@ public class AuditProducer implements RequestHandler<DynamodbEvent, Object> {
 		for (DynamodbEvent.DynamodbStreamRecord record : request.getRecords()) {
 			if (record.getEventName().equals("INSERT")) {
 				Map<String, AttributeValue> newImage = record.getDynamodb().getNewImage();
+				Map<String, Object> newImageMap = new HashMap<>();
+				newImageMap.put("key", newImage.get("key").getS());
+				newImageMap.put("value", Integer.parseInt(newImage.get("value").getN()));
 				Item item = new Item()
 						.withPrimaryKey("id", UUID.randomUUID().toString())
 						.withString("itemKey", newImage.get("key").getS())
 						.withString("modificationTime", Instant.now().toString())
-						.withMap("newValue", newImage);
+						.withMap("newValue", newImageMap);
 				table.putItem(item);
 			} else if (record.getEventName().equals("MODIFY")) {
 				Map<String, AttributeValue> oldImage = record.getDynamodb().getOldImage();
