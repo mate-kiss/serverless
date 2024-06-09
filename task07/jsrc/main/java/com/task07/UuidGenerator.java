@@ -4,16 +4,19 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.StringInputStream;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syndicate.deployment.annotations.events.RuleEventSource;
 import com.syndicate.deployment.annotations.events.RuleEvents;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.model.RetentionSetting;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.Instant;
-import java.util.UUID;
+import java.util.*;
 
 @LambdaHandler(lambdaName = "uuid_generator",
 	roleName = "uuid_generator-role",
@@ -22,18 +25,21 @@ import java.util.UUID;
 @RuleEvents(@RuleEventSource(targetRule = "uuid_trigger"))
 public class UuidGenerator implements RequestHandler<Object, Object> {
 	public Object handleRequest(Object request, Context context) {
-		AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
+		List<String> ids = new ArrayList<>();
+		for (int i = 0; i < 10; i++) {
+			ids.add(UUID.randomUUID().toString());
+		}
+		Map<String, List<String>> idsMap = new HashMap<>();
+		idsMap.put("ids", ids);
 
-		File file = new File(Instant.now().toString());
-		try (FileWriter writer = new FileWriter(file)) {
-			for (int i = 0; i < 10; i++) {
-				writer.write(UUID.randomUUID().toString() + "\n");
-			}
+		try {
+			String json = new ObjectMapper().writeValueAsString(idsMap);
 
-		} catch (IOException ignored) {}
+			AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
+			s3.putObject(new PutObjectRequest("cmtr-0a4e320b-uuid-storage-test", Instant.now().toString(), new StringInputStream(json), new ObjectMetadata()));
+		} catch (UnsupportedEncodingException | JsonProcessingException ignored) {
+        }
 
-		s3.putObject("cmtr-0a4e320b-uuid-storage-test", file.getName(), file);
-
-		return null;
+        return null;
 	}
 }
