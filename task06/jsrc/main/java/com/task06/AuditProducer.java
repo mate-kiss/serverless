@@ -48,7 +48,7 @@ public class AuditProducer implements RequestHandler<DynamodbEvent, Object> {
 						.withPrimaryKey("id", UUID.randomUUID().toString())
 						.withString("itemKey", newImage.get("key").getS())
 						.withString("modificationTime", Instant.now().toString())
-						.withString("updatedValue", "value")
+						.withString("updatedAttribute", "value")
 						.withInt("oldValue", Integer.parseInt(oldImage.get("value").getN()))
 						.withInt("newValue", Integer.parseInt(newImage.get("value").getN()));
 				table.putItem(item);
