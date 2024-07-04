@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.annotations.lambda.LambdaLayer;
 import com.syndicate.deployment.annotations.lambda.LambdaUrlConfig;
+import com.syndicate.deployment.model.DeploymentRuntime;
 import com.syndicate.deployment.model.RetentionSetting;
 import org.example.OpenMetro;
 
@@ -14,10 +15,12 @@ import java.util.Map;
 @LambdaHandler(lambdaName = "api_handler",
 	roleName = "api_handler-role",
 	logsExpiration = RetentionSetting.SYNDICATE_ALIASES_SPECIFIED,
-	layers = {"sdk_layer"}
+	layers = {"sdk_layer"},
+    runtime = DeploymentRuntime.JAVA21
 )
 @LambdaLayer(layerName = "sdk_layer",
-	libraries = {"lib/openmetro-1.0-SNAPSHOT.jar"}
+	libraries = {"lib/openmetro-1.0-SNAPSHOT.jar"},
+    runtime = DeploymentRuntime.JAVA21
 )
 @LambdaUrlConfig
 public class ApiHandler implements RequestHandler<Object, String> {
