@@ -1,5 +1,6 @@
 package com.task10;
 
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClient;
 import com.amazonaws.services.cognitoidp.model.*;
@@ -15,7 +16,6 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.model.RetentionSetting;
-import jakarta.mail.internet.InternetAddress;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -26,7 +26,7 @@ import java.util.*;
 )
 public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 	private AWSCognitoIdentityProvider cognito = new AWSCognitoIdentityProviderClient();
-	AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder.defaultClient();
+	private AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.EU_CENTRAL_1).build();
 	private DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
 
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
@@ -238,8 +238,6 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 		return response;
 	}
-
-	/* -------------------- */
 
 	private Map<String, Object> createTablesItemMap(Map<String, AttributeValue> item) {
 		Map<String, Object> itemMap =  new HashMap<>();
