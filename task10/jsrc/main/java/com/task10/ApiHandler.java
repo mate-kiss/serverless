@@ -15,6 +15,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.model.RetentionSetting;
+import jakarta.mail.internet.InternetAddress;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -66,7 +67,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 	}
 
 	public APIGatewayProxyResponseEvent signupPost(APIGatewayProxyRequestEvent request) {
-		JSONObject requestBody = new JSONObject(request.getBody());
+		/*JSONObject requestBody = new JSONObject(request.getBody());
 		String firstName = requestBody.getString("firstName");
 		String lastName = requestBody.getString("lastName");
 		String email = requestBody.getString("email");
@@ -74,6 +75,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 		APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
 		try {
+			//new InternetAddress(email).validate();
 			cognito.adminCreateUser(new AdminCreateUserRequest()
 					.withUserPoolId(UUID.randomUUID().toString())
 					.withUsername(email)
@@ -88,6 +90,9 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 			response.setStatusCode(400);
 		}
 
+		return response;*/
+		APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+		response.setStatusCode(200);
 		return response;
 	}
 
