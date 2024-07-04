@@ -12,6 +12,7 @@ import com.amazonaws.xray.AWSXRayRecorderBuilder;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.annotations.lambda.LambdaUrlConfig;
 import com.syndicate.deployment.model.RetentionSetting;
+import com.syndicate.deployment.model.TracingMode;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -24,7 +25,8 @@ import java.util.*;
 
 @LambdaHandler(lambdaName = "processor",
 	roleName = "processor-role",
-	logsExpiration = RetentionSetting.SYNDICATE_ALIASES_SPECIFIED
+	logsExpiration = RetentionSetting.SYNDICATE_ALIASES_SPECIFIED,
+	tracingMode = TracingMode.Active
 )
 @LambdaUrlConfig
 public class Processor implements RequestHandler<Object, Map<String, Object>> {
